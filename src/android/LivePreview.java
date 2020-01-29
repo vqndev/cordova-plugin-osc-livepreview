@@ -23,9 +23,9 @@ public class LivePreview extends CordovaPlugin {
   private HttpURLConnection connection;
 
 	@Override
-	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+	public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
 		if (action.equals("getLivePreview")) {
-			String ip = args.getString(0);
+			final String ip = args.getString(0);
 
       cordova.getThreadPool().execute(new Runnable() {
         @Override
@@ -55,9 +55,10 @@ public class LivePreview extends CordovaPlugin {
 		return false;
 	}
 
-	private void getLivePreview(CallbackContext callbackContext, String ip) throws IOException, JSONException, MalformedURLException {
+	private void getLivePreview(final CallbackContext callbackContext,final String ip) throws IOException, JSONException, MalformedURLException {
 		URL url = new URL(ip + "osc/commands/execute");
 		connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setRequestMethod("POST");
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
